@@ -1,3 +1,4 @@
+package gettingStarted
 
 object Sorted {
 
@@ -18,24 +19,5 @@ object Sorted {
         }
 
         go(0, as, ordered)
-    }
-
-    def main(args: Array[String]): Unit = {
-        println {
-            if (isSorted(Array(3, 2, 1), sup)) true
-            else false
-        }
-        println {
-            if (isSorted(Array(2, 3, 1), sup)) true
-            else false
-        }
-        println {
-            if (isSorted(Array('2', '3', '1'), inf)) true
-            else false
-        }
-        println {
-            if (isSorted(Array('1', '2', '3'), inf)) true
-            else false
-        }
     }
 }

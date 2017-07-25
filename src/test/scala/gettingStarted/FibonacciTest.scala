@@ -3,7 +3,7 @@ package gettingStarted
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class FibonacciSpec extends FlatSpec with Matchers {
+class FibonacciTest extends FlatSpec with Matchers {
   "Fibonacci 0" should "be 0" in {
     Fibonacci.fib(0) should be (0)
   }

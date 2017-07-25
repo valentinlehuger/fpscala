@@ -3,7 +3,7 @@ package gettingStarted
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class SortedSpec extends FlatSpec with Matchers {
+class SortedTest extends FlatSpec with Matchers {
 
     "isSorted(Array(3, 2, 1) sup)" should "be true" in {
         Sorted.isSorted(Array(3, 2, 1), Sorted.sup) should be (true)

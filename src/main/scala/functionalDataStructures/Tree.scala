@@ -39,7 +39,7 @@ object Tree {
 
     def maximum2(root: Tree[Int]): Int = fold(root)(a => a)(_ max _)
 
-    def depth2[A](root: Tree[A]): Int =  fold(root)(_ => 0)( (l, r) => 1 + (l max r))
+    def depth2[A](root: Tree[A]): Int =  fold(root)(_ => 1)( (l, r) => 1 + (l max r))
 
     def map2[A,B](root: Tree[A])(f: A => B): Tree[B] =
         fold(root)(a => Leaf(f(a)): Tree[B])(Branch(_, _))

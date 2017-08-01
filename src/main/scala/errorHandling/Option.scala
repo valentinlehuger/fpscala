@@ -35,4 +35,27 @@ object Option {
     def mean(xs: Seq[Double]): Option[Double] =
         if (xs.isEmpty) None
         else Some(xs.sum / xs.length)
+
+    def variance(xs: Seq[Double]): Option[Double] = {
+        mean(xs).flatMap(m => mean(xs.map(x => math.pow(x - m, 2))))
+    }
+
+    def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
+        case (None, _) => None
+        case (_, None) => None
+        case (Some(va), Some(vb)) => Some(f(va, vb))
+    }
+
+    def parseInsuranceRateQuote(age: String, numberOfSpeedingTickets: String): Option[Double] = {
+        val optAge: Option[Int] = Try(age toInt)
+        val optTickets: Option[Int] = Try(numberOfSpeedingTickets toInt)
+        map2(optAge, optTickets)(insuranceRateQuote)
+    }
+
+    def insuranceRateQuote(age: Int, tickets: Int) = (age + tickets) / 2.0
+
+    def Try[A](a: => A): Option[A] =
+        try Some(a)
+        catch { case e: Exception => None }
+
 }

@@ -56,4 +56,12 @@ class OptionTest extends FlatSpec with Matchers {
     "None.filter(x => x < 2)" should "None" in {
         None.filter(x => true) should be (None)
     }
+
+    "variance(Seq(1.5, 2.2, 3.3))" should "be 1.2" in {
+        Option.variance(Seq(1.5, 2.2, 3.3)) should be (Some(0.5488888888888888))
+    }
+
+    "parseInsuranceRateQuote(\"5\", \"7\")" should "be 6.0" in {
+        Option.parseInsuranceRateQuote("5", "7") should be (Some(6.0))
+    }
 }

@@ -40,11 +40,8 @@ object Option {
         mean(xs).flatMap(m => mean(xs.map(x => math.pow(x - m, 2))))
     }
 
-    def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = (a, b) match {
-        case (None, _) => None
-        case (_, None) => None
-        case (Some(va), Some(vb)) => Some(f(va, vb))
-    }
+    def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+        a flatMap (aa => b map (bb => f(aa, bb)))
 
     def parseInsuranceRateQuote(age: String, numberOfSpeedingTickets: String): Option[Double] = {
         val optAge: Option[Int] = Try(age toInt)
@@ -57,5 +54,11 @@ object Option {
     def Try[A](a: => A): Option[A] =
         try Some(a)
         catch { case e: Exception => None }
+
+    def sequence[A](a: List[Option[A]]):Option[List[A]] = a match {
+        case Nil => Some(Nil)
+        case h :: t => h flatMap (hh => sequence(t) map (tt => hh :: tt))
+    }
+
 
 }

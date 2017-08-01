@@ -64,4 +64,8 @@ class OptionTest extends FlatSpec with Matchers {
     "parseInsuranceRateQuote(\"5\", \"7\")" should "be 6.0" in {
         Option.parseInsuranceRateQuote("5", "7") should be (Some(6.0))
     }
+
+    "sequence(List(Some(1), Some(2))))" should "be Some(List(1, 2))" in {
+        Option.sequence(List(Some(1), Some(2))) should be (Some(List(1, 2)))
+    }
 }

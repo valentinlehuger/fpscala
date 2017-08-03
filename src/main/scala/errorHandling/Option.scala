@@ -60,5 +60,19 @@ object Option {
         case h :: t => h flatMap (hh => sequence(t) map (tt => hh :: tt))
     }
 
+    def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = a match {
+        case Nil => Some(Nil)
+        case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
+    }
+
+    def sequence2[A](a: List[Option[A]]):Option[List[A]] = 
+        traverse(a)(x => x)
+
+    // For-comprehension
+    def map2_fc[A,B,C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+        for {
+            aa <- a
+            bb <- b
+        } yield f(aa, bb)
 
 }

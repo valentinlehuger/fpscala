@@ -68,4 +68,12 @@ class OptionTest extends FlatSpec with Matchers {
     "sequence(List(Some(1), Some(2))))" should "be Some(List(1, 2))" in {
         Option.sequence(List(Some(1), Some(2))) should be (Some(List(1, 2)))
     }
+
+    "sequence2(List(Some(1), Some(2))))" should "be Some(List(1, 2))" in {
+        Option.sequence2(List(Some(1), Some(2))) should be (Some(List(1, 2)))
+    }
+
+    "traverse(List(1, 2))(x => Some(x.toSting))" should "be Some(List(1, 2))" in {
+        Option.traverse(List(1, 2))(x => Some(x.toString)) should be (Some(List("1", "2")))
+    }
 }

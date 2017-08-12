@@ -63,6 +63,43 @@ trait Stream[+A] {
 
     def find(p: A => Boolean): Option[A] =
         filter(p).headOption
+
+    def map2[B](f: A => B): Stream[B] =
+        unfold(this){
+            case Cons(h, t) => Some(f(h()), t())
+            case _ => None
+        }
+
+    def take2(n: Int): Stream[A] =
+        unfold((n, this)) {
+            case (x, Cons(h, t)) if x > 0 => Some(h(), (x - 1, t()))
+            case _ => None
+        }
+
+    def takeWhile2(p: A => Boolean): Stream[A] =
+        unfold(this){
+            case Cons(h, t) if p(h()) => Some(h(), t())
+            case _ => None
+        }
+
+    def zipWith[B, C](z: Stream[B])(f: (A, B) => C): Stream[C] =
+        unfold((this, z)) {
+            case (Cons(h, t), Cons(h2, t2)) => Some(f(h(), h2()), (t(), t2()))
+            case _ => None
+        }
+
+    def startsWith[A](s: Stream[A]): Boolean = (this, s) match {
+        case (_, Empty) => true
+        case (Cons(h, t), Cons(h2, t2)) if h() == h2() => t().startsWith(t2())
+        case _ => false
+    }
+
+    def scanRight[B](z: => B)(f: (A, => B) => B): Stream[B] =
+        foldRight((z, Stream(z)))((a,p) => {
+        val b2 = f(a,p._1)
+        (b2, cons(b2,p._2))
+        })._2
+
 }
 
 case object Empty extends Stream[Nothing]
@@ -96,4 +133,13 @@ object Stream {
         case Some((nextVal, nextState)) => cons(nextVal, unfold(nextState)(f))
         case None => empty
     }
+
+    def constant2[A](a: A): Stream[A] =
+        unfold(a)(x => Some(x, x))
+
+    def from2(n: Int): Stream[Int] =
+        unfold(n)(x => Some(x, x + 1))
+
+    def fibs2(): Stream[Int] =
+        unfold((0, 1))(x => Some(x._1, (x._2, x._1 + x._2)))
 }

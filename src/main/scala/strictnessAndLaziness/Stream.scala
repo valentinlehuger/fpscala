@@ -33,7 +33,19 @@ trait Stream[+A] {
         case _ => z
     }
 
-    def exists(p: A => Boolean): Boolean = foldRight(false)((a, b) => p(a) || b)
+    def exists(p: A => Boolean): Boolean =
+        foldRight(false)((item, acc) => p(item) || acc)
+
+    def forAll(p: A => Boolean): Boolean =
+        foldRight(true)((item, acc) => acc && p(item))
+
+    def takeWhileFR(p: A => Boolean): Stream[A] =
+        foldRight(empty[A])((item, acc) =>
+            if (p(item)) cons(item, acc)
+            else empty)
+
+    def headOptionFR: Option[A] =
+        foldRight(None:Option[A])((item, _) => Some(item))
 }
 
 case object Empty extends Stream[Nothing]

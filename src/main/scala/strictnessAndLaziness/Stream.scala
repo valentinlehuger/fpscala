@@ -46,6 +46,23 @@ trait Stream[+A] {
 
     def headOptionFR: Option[A] =
         foldRight(None:Option[A])((item, _) => Some(item))
+
+    def map[B](f: A => B): Stream[B] =
+        foldRight(empty[B])((item, acc) => cons(f(item), acc))
+
+    def filter(f: A => Boolean): Stream[A] =
+        foldRight(empty[A])((item, acc) =>
+            if (f(item)) cons(item, acc)
+            else         acc)
+
+    def append[B>:A](newItem: => Stream[B]): Stream[B] =
+        foldRight(newItem)((item, acc) => cons(item, acc))
+
+    def flatMap[B](f: A => Stream[B]): Stream[B] =
+        foldRight(empty[B])((item, acc) => f(item) append acc)
+
+    def find(p: A => Boolean): Option[A] =
+        filter(p).headOption
 }
 
 case object Empty extends Stream[Nothing]
@@ -64,4 +81,19 @@ object Stream {
     def apply[A](as: A*): Stream[A] =
         if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
 
+    def constant[A](a: A): Stream[A] =
+        Stream.cons(a, constant(a))
+
+    def from(n: Int): Stream[Int] =
+        Stream.cons(n, from(n + 1))
+
+    def fibs(): Stream[Int] = {
+        def helper(m: Int, n: Int): Stream[Int] = Stream.cons(m, helper(n, m + n))
+        helper(0, 1)
+    }
+
+    def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = f(z) match {
+        case Some((nextVal, nextState)) => cons(nextVal, unfold(nextState)(f))
+        case None => empty
+    }
 }

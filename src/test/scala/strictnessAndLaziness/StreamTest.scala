@@ -49,4 +49,35 @@ class StreamTest extends FlatSpec with Matchers {
         Stream(1, 2).headOptionFR should be (Some(1))
     }
 
+    "Stream(1, 2, 3).map(_ + 42)" should "be Stream(43, 44, 45)" in {
+        Stream(1, 2, 3).map(_ + 42).toList should be (List(43, 44, 45))
+    }
+
+    "Stream(1, 2, 3).filter(_ != 2)" should "be Stream(1, 3)" in {
+        Stream(1, 2, 3).filter(_ != 2).toList should be (List(1, 3))
+    }
+
+    "Stream(1, 2, 3).append(Stream(4))" should "be Stream(1, 2, 3, 4)" in {
+        Stream(1, 2, 3).append(Stream(4)).toList should be (List(1, 2, 3, 4))
+    }
+
+    "Stream(1, 2, 3).flatMap(Stream(_ + 42))" should "be Stream(43, 44, 45)" in {
+        Stream(1, 2, 3).flatMap(x => Stream(x + 42)).toList should be (List(43, 44, 45))
+    }
+
+    "Stream.constant(42).take(5)" should "be Stream(42, 42, 42, 42, 42)" in {
+        Stream.constant(42).take(5).toList should be (List(42, 42, 42, 42, 42))
+    }
+
+    "Stream.from(42).take(5)" should "be Stream(42, 43, 44, 45, 46)" in {
+        Stream.from(42).take(5).toList should be (List(42, 43, 44, 45, 46))
+    }
+
+    "Stream.fibs().take(7)" should "be Stream(0, 1, 1, 2, 3, 5, 8)" in {
+        Stream.fibs().take(7).toList should be (List(0, 1, 1, 2, 3, 5, 8))
+    }
+
+    "Stream.unfold(1)(x => Some(x + 1, x + 2)).take(5)" should "be Stream(2, 4, 6, 8, 10)" in {
+        Stream.unfold(1)(x => Some(x + 1, x + 2)).take(5).toList should be (List(2, 4, 6, 8, 10))
+    }
 }

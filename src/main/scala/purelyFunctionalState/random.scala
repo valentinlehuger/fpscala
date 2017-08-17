@@ -22,4 +22,34 @@ object RNG {
         val (n, next) = rng.nextInt
         if (n < 0) (n - Int.MinValue, next) else (n, next)
     }
+
+    def double(rng: RNG): (Double, RNG) = {
+        val (n, next) = nonNegativeInt(rng)
+        (n.toDouble / Int.MaxValue, next)
+    }
+
+    def intDouble(rng: RNG): ((Int, Double), RNG) = {
+        val (n, rng2) = rng.nextInt
+        val (m, next) = double(rng2)
+        ((n, m), next)
+    }
+
+    def doubleInt(rng: RNG): ((Double, Int), RNG) = {
+        val ((n, m), next) = intDouble(rng)
+        ((m, n), next)
+    }
+
+    def double3(rng: RNG): ((Double, Double, Double), RNG) = {
+        val (n1, next1) = double(rng)
+        val (n2, next2) = double(next1)
+        val (n3, next3) = double(next2)
+        ((n1, n2, n3), next3)
+    }
+
+    def ints(count: Int)(rng: RNG): (List[Int], RNG) =
+        if (count <= 0) (Nil, rng) else {
+            val (n, next) = rng.nextInt
+            val (tail, next2) = ints(count - 1)(next)
+            (n :: tail, next2)
+        }
 }

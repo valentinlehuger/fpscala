@@ -47,4 +47,27 @@ object Monoid {
     def op(a1: A => A, a2: A => A): A => A = a1 compose a2
     def zero: A => A = (a: A) => a
   }
+
+  // TODO test
+  def concatenate[A](as: List[A], m: Monoid[A]): A =
+    as.foldLeft(m.zero)(m.op)
+
+  // TODO test
+  def foldMap[A,B](as: List[A], m: Monoid[B])(f: A => B): B =
+    as.foldLeft(m.zero)((a, b) => m.op(a, f(b)))
+
+  // TODO test
+  def foldRight[A, B](as: List[A])(z: B)(f: (A, B) => B): B =
+    foldMap(as, endoMonoid[A])(f.curried)(z)
+
+  // TODO test
+  def foldMapV[A, B](v: IndexedSeq[A], m: Monoid[B])(f: A => B): B = v.length match {
+    case x if x > 1 => {
+      val (l, r) = v.splitAt(v.length / 2)
+      m.op(foldMapV(l), foldMapV(r))
+    }
+    case x if x == 1 => f(x)
+    case _ => m.zero
+  }
+
 }
